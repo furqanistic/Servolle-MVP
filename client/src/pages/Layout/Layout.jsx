@@ -1,449 +1,321 @@
+// Layout.jsx
 import { AnimatePresence, motion } from 'framer-motion'
 import {
   Bell,
-  Bookmark,
-  Briefcase,
+  Building2,
+  Clock,
   Compass,
   Home,
-  LogOut,
+  LogIn,
   Menu,
-  MessageSquare,
+  MoreHorizontal,
   PlusCircle,
   Search,
   Settings,
+  Upload,
   User,
   Users,
   X,
+  Zap,
 } from 'lucide-react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import NotificationDropdown from './NotificationDropdown'
 
-// Profile Dropdown Menu
-const ProfileDropdown = ({ isOpen, toggleDropdown }) => {
-  const dropdownVariants = {
-    hidden: {
-      opacity: 0,
-      y: -10,
-      scale: 0.95,
-      transition: { duration: 0.2 },
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { duration: 0.2 },
-    },
+const Layout = ({ children }) => {
+  const location = useLocation()
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [mobileSearchQuery, setMobileSearchQuery] = useState('')
+  const [showMobileSearch, setShowMobileSearch] = useState(false)
+  const [initialRender, setInitialRender] = useState(true)
+  const [showNotifications, setShowNotifications] = useState(false)
+
+  useEffect(() => {
+    const checkIfDesktop = () => {
+      setIsDesktop(window.innerWidth >= 768)
+    }
+
+    // Initial check
+    checkIfDesktop()
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfDesktop)
+
+    // Set initial render to false after mount
+    setInitialRender(false)
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfDesktop)
+  }, [])
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen)
   }
 
-  const menuItems = [
-    { icon: <User size={16} />, label: 'My Profile' },
-    { icon: <Bookmark size={16} />, label: 'Saved Services' },
-    { icon: <Settings size={16} />, label: 'Settings' },
-    { icon: <LogOut size={16} />, label: 'Log Out' },
-  ]
-
-  return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          initial='hidden'
-          animate='visible'
-          exit='hidden'
-          variants={dropdownVariants}
-          className='absolute right-0 mt-2 w-48 bg-app-medium border border-app-deep rounded-lg shadow-xl z-50 overflow-hidden'
-        >
-          <div className='py-2'>
-            {menuItems.map((item, index) => (
-              <motion.a
-                key={index}
-                whileHover={{ backgroundColor: 'rgba(0, 166, 244, 0.1)' }}
-                className='flex items-center px-4 py-2 text-gray-200 hover:text-white cursor-pointer'
-              >
-                <span className='text-app-lite mr-3'>{item.icon}</span>
-                <span>{item.label}</span>
-              </motion.a>
-            ))}
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-}
-
-// Mobile Navigation Menu with Original Colors
-const MobileMenu = ({ isOpen, toggleMenu }) => {
-  const menuVariants = {
-    closed: {
-      opacity: 0,
-      x: '100%',
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 30,
-      },
-    },
-    open: {
-      opacity: 1,
-      x: 0,
-      transition: {
-        type: 'spring',
-        stiffness: 300,
-        damping: 30,
-      },
-    },
+  const toggleNotifications = () => {
+    setShowNotifications(!showNotifications)
   }
 
+  // Close notifications dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        showNotifications &&
+        !event.target.closest('.notification-btn') &&
+        !event.target.closest('.notification-dropdown')
+      ) {
+        setShowNotifications(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showNotifications])
+
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
-            exit={{ opacity: 0 }}
-            className='fixed inset-0 bg-black z-40'
-            onClick={toggleMenu}
-          />
-          <motion.div
-            initial='closed'
-            animate='open'
-            exit='closed'
-            variants={menuVariants}
-            className='fixed top-0 right-0 h-full w-72 bg-app-deep shadow-lg z-50 overflow-y-auto border-l border-app-lite/20'
+    <div className='flex flex-col h-screen bg-gray-50'>
+      {/* Topbar */}
+      <div className='flex items-center justify-between px-4 py-3 bg-white shadow-sm h-16 z-10'>
+        <div className='flex items-center'>
+          <button
+            className='md:hidden mr-4 focus:outline-none'
+            onClick={toggleSidebar}
           >
-            <div className='flex justify-end p-4'>
-              <button onClick={toggleMenu} className='text-white'>
-                <X size={24} />
+            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+          {/* Logo in topbar - only shown on desktop */}
+          <div className='hidden md:flex items-center'>
+            <img src='/Logo.png' alt='Qalani Logo' className='h-12 my-1' />
+          </div>
+        </div>
+
+        <div className='flex-1 max-w-xl mx-4 hidden sm:block'>
+          <div className='relative'>
+            <input
+              type='text'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='w-full py-2 pl-10 pr-4 text-gray-700 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 transition-all'
+            />
+            <div className='absolute inset-y-0 left-0 flex items-center pl-3'>
+              <Search size={18} className='text-gray-400' />
+            </div>
+            {searchQuery.length > 0 && (
+              <button
+                className='absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600'
+                onClick={() => setSearchQuery('')}
+              >
+                <X size={16} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Mobile search icon & notification */}
+        <div className='sm:hidden flex items-center'>
+          {showMobileSearch ? (
+            <div className='relative w-full max-w-xs'>
+              <input
+                type='text'
+                value={mobileSearchQuery}
+                onChange={(e) => setMobileSearchQuery(e.target.value)}
+                className='w-full py-2 pl-10 pr-8 text-gray-700 bg-gray-50 border border-gray-200 rounded-full focus:outline-none focus:ring-1 focus:ring-gray-300 focus:border-gray-300 transition-all'
+                autoFocus
+              />
+              <div className='absolute inset-y-0 left-0 flex items-center pl-3'>
+                <Search size={18} className='text-gray-400' />
+              </div>
+              <div className='absolute inset-y-0 right-0 flex items-center pr-2'>
+                {mobileSearchQuery.length > 0 ? (
+                  <button
+                    className='p-1 text-gray-400 hover:text-gray-600'
+                    onClick={() => setMobileSearchQuery('')}
+                  >
+                    <X size={16} />
+                  </button>
+                ) : (
+                  <button
+                    className='p-1 text-gray-400 hover:text-gray-600'
+                    onClick={() => setShowMobileSearch(false)}
+                  >
+                    <X size={16} />
+                  </button>
+                )}
+              </div>
+            </div>
+          ) : (
+            <>
+              <button
+                className='p-2 text-gray-700 rounded-full hover:bg-gray-100 transition-colors mr-1'
+                onClick={() => setShowMobileSearch(true)}
+              >
+                <Search size={20} />
+              </button>
+              <div className='mr-1 relative'>
+                <button
+                  className='p-2 text-gray-700 rounded-full hover:bg-gray-100 transition-colors relative notification-btn'
+                  onClick={toggleNotifications}
+                >
+                  <Bell size={20} className='text-gray-800' />
+                  <span className='absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full'></span>
+                </button>
+                {/* Position notification dropdown directly below the bell button */}
+                <NotificationDropdown
+                  isOpen={showNotifications}
+                  onClose={() => setShowNotifications(false)}
+                />
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className='flex items-center space-x-3 md:flex hidden'>
+          <div className='mr-2 relative'>
+            <button
+              className='p-2 text-gray-700 rounded-full hover:bg-gray-100 transition-colors relative notification-btn'
+              onClick={toggleNotifications}
+            >
+              <Bell size={20} className='text-gray-800' />
+              <span className='absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full'></span>
+            </button>
+            {/* Position notification dropdown directly below the bell button */}
+            <NotificationDropdown
+              isOpen={showNotifications}
+              onClose={() => setShowNotifications(false)}
+            />
+          </div>
+          <button className='h-9 w-20 px-4 text-gray-700 border border-gray-300 rounded-full hover:bg-gray-100 transition-colors whitespace-nowrap flex items-center justify-center'>
+            Sign Up
+          </button>
+          <button className='h-9 w-20 px-4 text-white bg-black rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap flex items-center justify-center'>
+            Log In
+          </button>
+        </div>
+      </div>
+
+      <div className='flex flex-1 overflow-hidden'>
+        {/* Mobile Sidebar Overlay */}
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.5 }}
+              exit={{ opacity: 0 }}
+              className='fixed inset-0 bg-black z-20 md:hidden'
+              onClick={toggleSidebar}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Sidebar */}
+        <div
+          className={`fixed md:static inset-y-0 left-0 w-64 bg-white shadow-md z-30 overflow-y-auto flex flex-col justify-between md:translate-x-0 transition-transform duration-300 ${
+            isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+          }`}
+        >
+          <div className='flex flex-col py-2'>
+            <div className='px-4 mb-2'>
+              {/* Mobile logo - only shown on mobile */}
+              <div className='md:hidden flex items-center justify-center px-2'>
+                <img src='/Logo.png' alt='Qalani Logo' className='h-12' />
+              </div>
+              {/* Removed duplicate desktop logo from sidebar */}
+            </div>
+
+            <div className='sm:hidden mx-4 mb-6 hidden'>
+              <div className='relative'>
+                <input
+                  type='text'
+                  placeholder=''
+                  value={mobileSearchQuery}
+                  onChange={(e) => setMobileSearchQuery(e.target.value)}
+                  className='w-full py-2 pl-10 pr-4 text-gray-700 bg-gray-100 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-200'
+                />
+                <div className='absolute inset-y-0 left-0 flex items-center pl-3'>
+                  <Search size={18} className='text-gray-500' />
+                </div>
+                {mobileSearchQuery.length > 0 && (
+                  <button className='absolute inset-y-0 right-0 flex items-center pr-3'>
+                    <Search size={18} className='text-gray-700' />
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <SidebarItem icon={<Home size={24} />} text='Home' path='/home' />
+            <SidebarItem
+              icon={<Zap size={24} />}
+              text='Quicks'
+              path='/quicks'
+            />
+            <SidebarItem
+              icon={<Users size={24} />}
+              text='Connect'
+              path='/connect'
+            />
+            <SidebarItem
+              icon={<Clock size={24} />}
+              text='History'
+              path='/history'
+            />
+            <SidebarItem
+              icon={<User size={24} />}
+              text='Profile'
+              path='/profile'
+            />
+            <SidebarItem
+              icon={<Settings size={24} />}
+              text='Settings'
+              path='/settings'
+            />
+
+            {/* Mobile-only auth buttons */}
+            <div className='md:hidden mt-6 px-4 space-y-3'>
+              <button className='w-full h-9 px-4 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-100 transition-colors flex items-center justify-center'>
+                Sign Up
+              </button>
+              <button className='w-full h-9 px-4 text-white bg-black rounded-lg hover:bg-gray-800 transition-colors flex items-center justify-center'>
+                Log In
               </button>
             </div>
-            <div className='p-4'>
-              <div className='space-y-1'>
-                <SideNavItem icon={<Home size={20} />} label='Home' active />
-                <SideNavItem icon={<Compass size={20} />} label='Discover' />
-                <SideNavItem icon={<Users size={20} />} label='Network' />
-                <SideNavItem icon={<Briefcase size={20} />} label='Services' />
-                <SideNavItem
-                  icon={<MessageSquare size={20} />}
-                  label='Messages'
-                />
-                <SideNavItem icon={<Bell size={20} />} label='Notifications' />
-                <SideNavItem icon={<Bookmark size={20} />} label='Saved' />
-              </div>
 
-              <div className='mt-6 pt-6 border-t border-app-medium'>
-                <button className='w-full bg-app-lite hover:bg-opacity-90 text-white py-2 px-4 rounded-lg font-medium flex items-center justify-center'>
-                  <PlusCircle size={18} className='mr-2' />
-                  Create
-                </button>
-              </div>
+            {/* New button at the end of sidebar */}
+            <div className='px-4 mt-auto pt-6'>
+              <button className='w-full flex items-center justify-center py-2 text-white bg-sky-500 rounded-lg hover:bg-sky-600 transition-colors'>
+                <PlusCircle size={18} className='mr-2' />
+                New
+              </button>
             </div>
-          </motion.div>
-        </>
-      )}
-    </AnimatePresence>
-  )
-}
-
-// Side Navigation Item Component - Matches Screenshot
-const SideNavItem = ({ icon, label, badge, active }) => {
-  return (
-    <motion.div
-      whileHover={{ backgroundColor: 'rgba(0, 166, 244, 0.1)' }}
-      whileTap={{ scale: 0.98 }}
-      className={`flex items-center justify-between py-2.5 px-4 mx-2 cursor-pointer rounded-lg ${
-        active ? 'text-app-lite' : 'text-gray-100 hover:text-white'
-      }`}
-    >
-      <div className='flex items-center'>
-        <div className={`${active ? 'text-app-lite' : 'text-gray-300'}`}>
-          {icon}
-        </div>
-        <span className='ml-3'>{label}</span>
-      </div>
-      {badge && (
-        <span className='bg-app-lite text-white text-xs px-1.5 py-0.5 min-w-[18px] text-center rounded-full'>
-          {badge}
-        </span>
-      )}
-    </motion.div>
-  )
-}
-
-// Search Component
-const SearchBar = () => {
-  const [isFocused, setIsFocused] = useState(false)
-
-  return (
-    <div className='relative max-w-md w-full'>
-      <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-        <Search
-          size={18}
-          className={isFocused ? 'text-app-lite' : 'text-gray-400'}
-        />
-      </div>
-      <input
-        type='text'
-        className={`block w-full pl-10 pr-3 py-2 border ${
-          isFocused ? 'border-app-lite' : 'border-gray-700'
-        } rounded-full bg-app-deep text-white placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-app-lite focus:border-app-lite transition-all duration-200`}
-        placeholder='Search people, services, posts...'
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
-      />
-    </div>
-  )
-}
-
-// Create Button
-const CreateButton = () => {
-  return (
-    <motion.button
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
-      className='bg-app-lite text-white rounded-full py-2 px-4 flex items-center font-medium shadow-sm'
-    >
-      <PlusCircle size={18} className='mr-2' />
-      <span>Create</span>
-    </motion.button>
-  )
-}
-
-// Top Navigation Item - Matches Screenshot
-const TopNavItem = ({ icon, label, active, notification }) => {
-  return (
-    <div
-      className={`flex flex-col items-center justify-center h-16 px-6 relative cursor-pointer ${
-        active
-          ? 'text-app-lite border-b-2 border-app-lite'
-          : 'text-gray-300 hover:text-white'
-      }`}
-    >
-      <div className='relative'>
-        {icon}
-        {notification && (
-          <div className='absolute -top-1 -right-1 bg-app-lite text-white text-xs rounded-full h-4 w-4 flex items-center justify-center'>
-            {notification}
-          </div>
-        )}
-      </div>
-      <span className='text-xs mt-1'>{label}</span>
-    </div>
-  )
-}
-
-// Topbar Component
-const Topbar = ({ toggleMenu }) => {
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
-
-  return (
-    <div className='bg-app-medium shadow z-10 sticky top-0'>
-      <div className='max-w-7xl mx-auto'>
-        <div className='flex justify-between items-center h-16 px-4'>
-          {/* Logo */}
-          <div className='flex items-center'>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className='flex items-center mr-6'
-            >
-              <span className='text-app-lite text-2xl font-bold'>Servolle</span>
-            </motion.div>
-
-            {/* Desktop Search */}
-            <div className='hidden md:block'>
-              <SearchBar />
-            </div>
-          </div>
-
-          {/* Desktop Navigation */}
-          <div className='hidden md:flex items-center space-x-1'>
-            <TopNavItem icon={<Home size={22} />} label='Home' active={true} />
-            <TopNavItem icon={<Users size={22} />} label='Network' />
-            <TopNavItem icon={<Compass size={22} />} label='Discover' />
-            <TopNavItem icon={<Briefcase size={22} />} label='Services' />
-          </div>
-
-          {/* Right Actions */}
-          <div className='flex items-center space-x-4'>
-            {/* Desktop Only Buttons */}
-            <div className='hidden md:flex items-center space-x-3'>
-              <CreateButton />
-
-              <motion.button
-                whileHover={{ y: -2 }}
-                whileTap={{ y: 0 }}
-                className='text-gray-300 hover:text-white relative'
-              >
-                <MessageSquare size={22} />
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className='absolute -top-1 -right-1 bg-app-lite text-white text-xs rounded-full h-4 w-4 flex items-center justify-center'
-                >
-                  5
-                </motion.div>
-              </motion.button>
-
-              <motion.button
-                whileHover={{ y: -2 }}
-                whileTap={{ y: 0 }}
-                className='text-gray-300 hover:text-white relative'
-              >
-                <Bell size={22} />
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className='absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center'
-                >
-                  3
-                </motion.div>
-              </motion.button>
-            </div>
-
-            {/* Profile Button - both desktop and mobile */}
-            <div className='relative'>
-              <motion.button
-                onClick={() => setIsProfileOpen(!isProfileOpen)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className='relative h-10 w-10 rounded-full overflow-hidden border-2 border-app-lite focus:outline-none'
-              >
-                <img
-                  src='https://images.pexels.com/photos/846741/pexels-photo-846741.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-                  alt='Profile'
-                  className='h-full w-full object-cover'
-                />
-              </motion.button>
-              <ProfileDropdown
-                isOpen={isProfileOpen}
-                toggleDropdown={() => setIsProfileOpen(!isProfileOpen)}
-              />
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={toggleMenu}
-              className='md:hidden text-gray-200 hover:text-app-lite'
-            >
-              <Menu size={24} />
-            </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Search Bar */}
-      <div className='md:hidden px-4 pb-3'>
-        <SearchBar />
+        {/* Main Content */}
+        <main className='flex-1 overflow-auto p-4 bg-gray-50'>{children}</main>
       </div>
     </div>
   )
 }
 
-// Left Sidebar Component to Match Screenshot
-const LeftSidebar = () => {
-  return (
-    <div className='bg-app-deep rounded-lg overflow-hidden shadow-md'>
-      <div className='py-2'>
-        <div className='space-y-1'>
-          <SideNavItem icon={<Home size={20} />} label='Home' active />
-          <SideNavItem icon={<Compass size={20} />} label='Discover' />
-          <SideNavItem icon={<Users size={20} />} label='Network' />
-          <SideNavItem icon={<Briefcase size={20} />} label='Services' />
-          <SideNavItem icon={<MessageSquare size={20} />} label='Messages' />
-          <SideNavItem icon={<Bell size={20} />} label='Notifications' />
-          <SideNavItem icon={<Bookmark size={20} />} label='Saved' />
-        </div>
-
-        <div className='mt-6 px-3'>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className='w-full bg-app-lite text-white py-2 px-3 rounded-lg font-medium flex items-center justify-center'
-          >
-            <PlusCircle size={18} className='mr-2' />
-            <span>Create</span>
-          </motion.button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Main Layout Component
-const Layout = ({ children }) => {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen)
-  }
+// Sidebar Item Component
+const SidebarItem = ({ icon, text, path }) => {
+  const location = useLocation()
+  const isActive =
+    location.pathname === path ||
+    (path === '/home' && location.pathname === '/')
 
   return (
-    <div className='min-h-screen bg-app-base text-white'>
-      <Topbar toggleMenu={toggleMobileMenu} />
-
-      {/* Mobile Menu */}
-      <MobileMenu isOpen={isMobileMenuOpen} toggleMenu={toggleMobileMenu} />
-
-      {/* Main Content with Sidebar */}
-      <div className='max-w-7xl mx-auto px-4 py-4'>
-        <div className='grid grid-cols-12 gap-4'>
-          {/* Left Sidebar */}
-          <div className='hidden md:block md:col-span-3 lg:col-span-2'>
-            <LeftSidebar />
-          </div>
-
-          {/* Main Content */}
-          <div className='col-span-12 md:col-span-9 lg:col-span-7'>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.2 }}
-            >
-              {children}
-            </motion.div>
-          </div>
-
-          {/* Right Content - Only visible on large screens - Matches Screenshot */}
-          <div className='hidden lg:block lg:col-span-3'>
-            <div className='bg-app-deep rounded-lg overflow-hidden shadow-md'>
-              <div className='p-4'>
-                <h3 className='font-medium text-white text-lg mb-3'>
-                  Trending Services
-                </h3>
-                <div className='space-y-3'>
-                  <div className='flex items-center p-2 hover:bg-app-medium/50 rounded-lg transition-colors'>
-                    <div className='h-10 w-10 bg-app-medium rounded-lg flex items-center justify-center mr-3 text-app-lite'>
-                      <Briefcase size={20} />
-                    </div>
-                    <div>
-                      <p className='text-white'>Web Development</p>
-                      <p className='text-xs text-gray-400'>143 providers</p>
-                    </div>
-                  </div>
-                  <div className='flex items-center p-2 hover:bg-app-medium/50 rounded-lg transition-colors'>
-                    <div className='h-10 w-10 bg-app-medium rounded-lg flex items-center justify-center mr-3 text-app-lite'>
-                      <Users size={20} />
-                    </div>
-                    <div>
-                      <p className='text-white'>Social Media Marketing</p>
-                      <p className='text-xs text-gray-400'>98 providers</p>
-                    </div>
-                  </div>
-                  <div className='flex items-center p-2 hover:bg-app-medium/50 rounded-lg transition-colors'>
-                    <div className='h-10 w-10 bg-app-medium rounded-lg flex items-center justify-center mr-3 text-app-lite'>
-                      <Settings size={20} />
-                    </div>
-                    <div>
-                      <p className='text-white'>IT Support</p>
-                      <p className='text-xs text-gray-400'>72 providers</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <Link to={path} className='block'>
+      <div
+        className={`flex items-center px-4 py-3 cursor-pointer ${
+          isActive ? 'text-black font-medium' : 'text-gray-600'
+        } hover:bg-gray-100 transition-colors hover:translate-x-1 transition-transform`}
+      >
+        <div className='mr-4'>{icon}</div>
+        <span>{text}</span>
       </div>
-    </div>
+    </Link>
   )
 }
 

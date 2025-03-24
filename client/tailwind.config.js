@@ -14,6 +14,9 @@ module.exports = {
           lite: '#00a6f4', // light sky blue shade
         },
       },
+      fontFamily: {
+        montserrat: ['"Montserrat"', 'sans-serif'],
+      },
     },
   },
   plugins: [],
