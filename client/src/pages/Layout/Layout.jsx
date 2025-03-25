@@ -348,7 +348,7 @@ const Layout = ({ children }) => {
 
         {/* Main Content */}
         <main className='flex-1 overflow-auto custom-scrollbar bg-white'>
-          {/* Filter Tags - Responsive scrollable container */}
+          {/* Filter Tags */}
           <div className='relative border-b border-gray-100'>
             <div className='flex overflow-x-auto py-4 px-4 hide-scrollbar gap-4 md:gap-6 whitespace-nowrap'>
               <button className='text-base md:text-lg font-bold text-black hover:text-gray-700 transition-colors flex-shrink-0 px-1'>
