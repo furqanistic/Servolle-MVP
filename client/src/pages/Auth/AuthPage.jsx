@@ -66,6 +66,16 @@ const AuthPage = () => {
     accountType: false, // Added touched field for account type
   })
 
+  // Set initial active tab based on URL path
+  useEffect(() => {
+    const path = window.location.pathname
+    if (path === '/login') {
+      setActiveTab('login')
+    } else if (path === '/signup') {
+      setActiveTab('signup')
+    }
+  }, []) // Empty dependency array ensures this runs once on mount
+
   // Set appropriate greeting based on time of day
   useEffect(() => {
     const getTimeBasedGreeting = () => {

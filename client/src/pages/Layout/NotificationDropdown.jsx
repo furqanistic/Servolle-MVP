@@ -1,8 +1,25 @@
 // NotificationDropdown.jsx
 import { Bell, Clock, MessageCircle, User, X } from 'lucide-react'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 const NotificationDropdown = ({ isOpen, onClose }) => {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+
+    // Check initially
+    checkIfMobile()
+
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile)
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile)
+  }, [])
+
   if (!isOpen) return null
 
   // Sample notifications data with more entries to enable scrolling
@@ -105,10 +122,21 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
     },
   ]
 
+  // For mobile, position dropdown to stay in viewport
+  const dropdownPosition = isMobile
+    ? 'fixed top-16 right-2 left-2 mt-0'
+    : 'absolute top-full right-0 mt-1 w-80'
+
   return (
-    <div className='absolute top-full right-0 mt-1 w-80 max-h-96 bg-white rounded-lg shadow-lg overflow-hidden z-50 notification-dropdown'>
+    <div
+      className={`${dropdownPosition} max-h-96 bg-white rounded-lg shadow-lg overflow-hidden z-50 notification-dropdown`}
+    >
       {/* Arrow pointer connecting to the bell icon - positioned at the top right */}
-      <div className='absolute -top-2 right-3 w-4 h-4 bg-white transform rotate-45'></div>
+      <div
+        className={`absolute -top-2 ${
+          isMobile ? 'right-12' : 'right-3'
+        } w-4 h-4 bg-white transform rotate-45`}
+      ></div>
 
       {/* Content container with its own bg to hide the arrow's bottom part */}
       <div className='relative bg-white rounded-lg'>
