@@ -1,40 +1,18 @@
 import ForgotPasswordFlow from '@/components/Auth/ForgotPasswordFlow'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  ArrowRight,
-  Building,
-  Eye,
-  EyeOff,
-  Lock,
-  LogIn,
-  Mail,
-  Moon,
-  Sun,
-  Sunrise,
-  Sunset,
-  User,
-  UserPlus,
-} from 'lucide-react'
+
+import { Building, Eye, EyeOff, User } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
 const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [activeTab, setActiveTab] = useState('signup')
-  const [greeting, setGreeting] = useState('')
-  const [timeIcon, setTimeIcon] = useState(null)
-  const [showForgotPassword, setShowForgotPassword] = useState(false) // New state for forgot password flow
+  const [showForgotPassword, setShowForgotPassword] = useState(false)
 
   // Form states
   const [signupForm, setSignupForm] = useState({
@@ -42,7 +20,7 @@ const AuthPage = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    isBusinessAccount: null, // Changed from false to null to represent no selection
+    isBusinessAccount: null,
     agreeTerms: false,
   })
 
@@ -53,7 +31,7 @@ const AuthPage = () => {
     password: '',
     confirmPassword: '',
     agreeTerms: '',
-    accountType: '', // Added error field for account type
+    accountType: '',
   })
 
   // Touch tracking (to only show errors after user interaction)
@@ -63,7 +41,7 @@ const AuthPage = () => {
     password: false,
     confirmPassword: false,
     agreeTerms: false,
-    accountType: false, // Added touched field for account type
+    accountType: false,
   })
 
   // Set initial active tab based on URL path
@@ -74,33 +52,6 @@ const AuthPage = () => {
     } else if (path === '/signup') {
       setActiveTab('signup')
     }
-  }, []) // Empty dependency array ensures this runs once on mount
-
-  // Set appropriate greeting based on time of day
-  useEffect(() => {
-    const getTimeBasedGreeting = () => {
-      const hour = new Date().getHours()
-
-      if (hour >= 5 && hour < 12) {
-        setGreeting('Good Morning')
-        setTimeIcon(<Sunrise className='h-5 w-5 text-amber-500' />)
-      } else if (hour >= 12 && hour < 17) {
-        setGreeting('Good Afternoon')
-        setTimeIcon(<Sun className='h-5 w-5 text-amber-500' />)
-      } else if (hour >= 17 && hour < 21) {
-        setGreeting('Good Evening')
-        setTimeIcon(<Sunset className='h-5 w-5 text-orange-500' />)
-      } else {
-        setGreeting('Good Night')
-        setTimeIcon(<Moon className='h-5 w-5 text-indigo-500' />)
-      }
-    }
-
-    getTimeBasedGreeting()
-    // Update greeting every minute in case the user crosses a time boundary
-    const intervalId = setInterval(getTimeBasedGreeting, 60000)
-
-    return () => clearInterval(intervalId)
   }, [])
 
   // Handle input changes
@@ -273,43 +224,70 @@ const AuthPage = () => {
     setActiveTab('login')
   }
 
-  // Common input class for consistent styling
+  // Common input class for consistent styling - only focus border updated
   const inputClass =
-    'border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-transparent rounded-sm transition-colors placeholder:text-black focus:placeholder:text-black'
+    'border border-gray-300 hover:border-2 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-black focus:border-2 rounded-sm placeholder:text-black focus:placeholder:text-black'
 
+  // Consistent button styling to match input fields
   const passwordInputClass =
-    'pr-10 border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-transparent rounded-sm transition-colors placeholder:text-gray-400 focus:placeholder:text-sky-800'
+    'pr-10 border border-gray-300 hover:border-2 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-black focus:border-2 rounded-sm placeholder:text-gray-400 focus:placeholder:text-black'
 
   // Consistent button styling to match input fields
   const buttonClass =
-    'w-full bg-sky-500 hover:bg-sky-400 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none mt-0'
+    'w-full bg-black hover:bg-gray-800 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none mt-0'
 
   return (
     <div className='min-h-screen flex flex-col justify-between p-3 pb-4 overflow-x-hidden max-w-full'>
-      <div className='flex flex-col'>
-        {/* Header section - reduced spacing */}
-        <div className='flex justify-center pt-3 sm:pt-2'>
-          <div className='text-center'>
-            <div className='inline-block border-3 border-black rounded-xl p-3 mb-1'>
-              <h1 className='text-3xl font-medium text-black'>qalani</h1>
-            </div>
-            <p className='text-gray-400 sm:text-black text-lg tracking-wide font-montserrat my-1 font-bold whitespace-nowrap'>
-              Business-Focused Social Media
-            </p>
-          </div>
+      {/* Content container */}
+      <div className='flex flex-col flex-grow'>
+        {/* Logo - Regular positioning on mobile, absolute on desktop */}
+        <div className='relative w-full text-center mb-4 mt-2 sm:absolute sm:top-5 sm:left-5 sm:w-auto sm:mb-0 sm:text-left'>
+          <img
+            src='/Logo.svg'
+            alt='Qalani Logo'
+            width='180'
+            height='60'
+            className='max-w-full h-auto inline-block'
+          />
         </div>
 
-        {/* Auth forms section - moved up */}
-        <div className='flex items-start justify-center mb-0 mt-0'>
+        {/* Single Tagline Section - Proper Responsive Handling */}
+        <div className='w-full mx-auto text-center px-2 mb-0'>
+          <p className='text-gray-400 font-montserrat my-0 font-bold'>
+            {/* Mobile Version - Block on small screens, hidden on medium+ */}
+            <span className='block sm:hidden text-3xl tracking-tight'>
+              Amazon-Focused
+              <span
+                className='block'
+                style={{ lineHeight: '1', marginTop: '-2px' }}
+              >
+                Social Commerce
+              </span>
+            </span>
+            {/* Desktop Version - Hidden on small screens, block on medium+ */}
+            <span
+              className='hidden sm:block sm:mt-4 tracking-wide'
+              style={{ fontSize: '2.6rem', lineHeight: '1.2' }}
+            >
+              Amazon-Focused
+              <br />
+              Social Commerce
+            </span>
+          </p>
+        </div>
+        {/* NO SECOND TAGLINE HERE - REMOVED DUPLICATE */}
+
+        {/* Auth forms section - with consistent spacing on mobile */}
+        <div className='flex items-start justify-center mb-auto mt-2'>
           <div className='w-full max-w-md'>
             {!showForgotPassword ? (
               <>
-                {/* Tabs - less bottom margin */}
-                <div className='mx-auto mb-0 rounded-full bg-white p-1.5 max-w-xs overflow-hidden'>
+                {/* Tabs - consistent margin for mobile */}
+                <div className='mx-auto mb-0 sm:mb-2 rounded-full bg-white p-1.5 max-w-xs overflow-hidden'>
                   <div className='relative grid grid-cols-2 gap-3 h-11 rounded-full'>
                     {/* Active Tab Indicator - Positioned absolutely */}
                     <div
-                      className='absolute h-9 rounded-full bg-sky-500 transition-transform duration-300 ease-in-out transform w-[calc(50%-10px)]'
+                      className='absolute h-9 rounded-full bg-black transition-transform duration-300 ease-in-out transform w-[calc(50%-10px)]'
                       style={{
                         top: '4px',
                         left: '5px',
@@ -323,7 +301,7 @@ const AuthPage = () => {
                     <button
                       onClick={() => setActiveTab('signup')}
                       className={`relative z-10 py-2 px-4 font-medium transition-colors duration-300 rounded-full ${
-                        activeTab === 'signup' ? 'text-white' : 'text-sky-600'
+                        activeTab === 'signup' ? 'text-white' : 'text-black'
                       }`}
                     >
                       Sign Up
@@ -331,7 +309,7 @@ const AuthPage = () => {
                     <button
                       onClick={() => setActiveTab('login')}
                       className={`relative z-10 py-2 px-4 font-medium transition-colors duration-300 rounded-full ${
-                        activeTab === 'login' ? 'text-white' : 'text-sky-600'
+                        activeTab === 'login' ? 'text-white' : 'text-black'
                       }`}
                     >
                       Log In
@@ -339,21 +317,22 @@ const AuthPage = () => {
                   </div>
                 </div>
 
-                {/* Form Content */}
-                <div className='relative w-full min-h-[420px] '>
+                {/* Form Content - with both tabs having the same height and eliminated top margin on mobile */}
+                <div className='relative w-full sm:mt-0'>
                   {/* Login Content */}
                   <div
-                    className={`absolute top-0 left-0 w-full transition-opacity duration-300 ${
+                    className={`transition-opacity duration-300 ${
                       activeTab === 'login'
                         ? 'opacity-100 z-10'
-                        : 'opacity-0 z-0 pointer-events-none'
+                        : 'opacity-0 z-0 absolute w-full pointer-events-none'
                     }`}
+                    style={{ minHeight: '380px' }}
                   >
                     <Card className='rounded-xl overflow-hidden max-w-full border-0 shadow-none '>
-                      <CardContent className='pt-1 px-4 sm:px-6'>
+                      <CardContent className='pt-3 sm:pt-6 px-4  sm:px-6 pb-0'>
                         <form onSubmit={(e) => e.preventDefault()}>
-                          <div className='space-y-3 '>
-                            <div className='space-y-1'>
+                          <div className='space-y-3 mt-6  sm:mt-1'>
+                            <div className='space-y-1 '>
                               <Label
                                 htmlFor='email'
                                 className='text-black font-medium text-sm'
@@ -362,7 +341,7 @@ const AuthPage = () => {
                               </Label>
                               <Input id='email' className={inputClass} />
                             </div>
-                            <div className='space-y-1 '>
+                            <div className='space-y-1'>
                               <div className='flex justify-between'>
                                 <Label
                                   htmlFor='password'
@@ -389,7 +368,7 @@ const AuthPage = () => {
                                 />
                                 <button
                                   type='button'
-                                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-sky-600'
+                                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-black'
                                   onClick={() => setShowPassword(!showPassword)}
                                 >
                                   {showPassword ? (
@@ -417,25 +396,31 @@ const AuthPage = () => {
                         </form>
                       </CardContent>
                       <CardFooter className='pb-1 px-4 sm:px-6'>
-                        <Button className={buttonClass}>Log In</Button>
+                        <Button
+                          className={buttonClass}
+                          onClick={() => (window.location.href = '/')}
+                        >
+                          Log In
+                        </Button>
                       </CardFooter>
                     </Card>
                   </div>
 
-                  {/* Sign Up Content - Adjusted padding and spacing */}
+                  {/* Sign Up Content */}
                   <div
                     className={`transition-opacity duration-300 ${
                       activeTab === 'signup'
                         ? 'opacity-100 z-10'
                         : 'opacity-0 z-0 absolute top-0 left-0 w-full pointer-events-none'
                     }`}
+                    style={{ minHeight: '380px' }}
                   >
                     <Card className='rounded-xl overflow-hidden border-0 shadow-none mt-0'>
-                      <CardContent className='px-4 sm:px-6 pt-0'>
+                      <CardContent className='px-4 sm:px-6 pt-3 sm:pt-6 pb-0'>
                         <form onSubmit={handleSignup}>
-                          <div className='space-y-2'>
-                            {/* Account Type Selection - Reduced top spacing */}
-                            <div className='space-y-1 mt-1'>
+                          <div className='space-y-2 mt-6 sm:mt-1'>
+                            {/* Account Type Selection - Precisely aligned with login form */}
+                            <div className='space-y-1'>
                               <Label
                                 htmlFor='accountType'
                                 className='text-black font-medium text-sm'
@@ -445,10 +430,10 @@ const AuthPage = () => {
                               <div className='grid grid-cols-2 gap-3 mx-auto'>
                                 {/* Individual Account Option */}
                                 <div
-                                  className={`relative overflow-hidden rounded-sm cursor-pointer transition-all duration-300 border ${
+                                  className={`relative overflow-hidden rounded-sm cursor-pointer ${
                                     signupForm.isBusinessAccount === false
-                                      ? 'border-black'
-                                      : 'border-gray-300'
+                                      ? 'ring-0 border-2 border-black'
+                                      : 'border border-gray-300 hover:border-2 hover:border-black'
                                   } group`}
                                   onClick={() => toggleBusinessAccount(false)}
                                 >
@@ -484,10 +469,10 @@ const AuthPage = () => {
 
                                 {/* Business Account Option */}
                                 <div
-                                  className={`relative overflow-hidden rounded-sm cursor-pointer transition-all duration-300 border ${
+                                  className={`relative overflow-hidden rounded-sm cursor-pointer ${
                                     signupForm.isBusinessAccount === true
-                                      ? 'border-black'
-                                      : 'border-gray-300'
+                                      ? 'ring-0 border-2 border-black'
+                                      : 'border border-gray-300 hover:border-2 hover:border-black'
                                   } group`}
                                   onClick={() => toggleBusinessAccount(true)}
                                 >
@@ -528,7 +513,7 @@ const AuthPage = () => {
                               )}
                             </div>
 
-                            {/* Full Name field (replaces first and last name) */}
+                            {/* Full Name field - Reduced spacing */}
                             <div className='space-y-1'>
                               <Label
                                 htmlFor='fullName'
@@ -588,7 +573,7 @@ const AuthPage = () => {
                                 />
                                 <button
                                   type='button'
-                                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-sky-600'
+                                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-black'
                                   onClick={() => setShowPassword(!showPassword)}
                                 >
                                   {showPassword ? (
@@ -624,7 +609,7 @@ const AuthPage = () => {
                                 />
                                 <button
                                   type='button'
-                                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-sky-600'
+                                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-black'
                                   onClick={() =>
                                     setShowConfirmPassword(!showConfirmPassword)
                                   }
@@ -644,7 +629,7 @@ const AuthPage = () => {
                                 )}
                             </div>
 
-                            <div className='flex items-center space-x-3 mt-2'>
+                            <div className='flex items-center space-x-3 mt-1'>
                               <Checkbox
                                 id='terms'
                                 name='agreeTerms'
@@ -713,8 +698,8 @@ const AuthPage = () => {
         </div>
       </div>
 
-      {/* Footer with slightly more space from the form */}
-      <div className='text-center text-gray-500 mt-3 mb-4'>
+      {/* Footer - now fixed at bottom */}
+      <div className='text-center text-gray-500 mt-2 mb-4'>
         <div className='flex flex-col font-poppins sm:flex-row justify-center items-center gap-2 sm:gap-4'>
           <span className='text-sm font-bold text-gray-400'>
             &copy; Copyright 2025 Qalani. All rights reserved.

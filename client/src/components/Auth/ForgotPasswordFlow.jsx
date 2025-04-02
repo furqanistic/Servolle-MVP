@@ -336,7 +336,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
             Reset Your Password
           </h2>
           <p className='text-gray-500 text-xs text-center'>
-            Enter your email and we'll send you a verification code
+            Enter your email and we'll send you a verification code.
           </p>
         </div>
 
@@ -357,7 +357,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
               type='email'
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className='border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-transparent rounded-sm transition-colors placeholder:text-gray-400'
+              className='border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-black focus:border-2 rounded-sm transition-colors placeholder:text-gray-400'
               aria-describedby='email-error'
               disabled={isSubmitting}
               ref={initialFocusRef}
@@ -372,7 +372,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
 
           <Button
             type='submit'
-            className='w-full bg-sky-500 hover:bg-sky-400 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none'
+            className='w-full bg-black hover:bg-gray-800 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none focus:border-black focus:border-2'
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -392,7 +392,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
             <Button
               type='button'
               onClick={onBack}
-              className='w-full bg-transparent hover:bg-gray-50 text-black font-medium text-sm rounded-sm border border-gray-300 transition-all duration-300'
+              className='w-full bg-transparent hover:bg-gray-50 text-black font-medium text-sm rounded-sm border border-gray-300 transition-all duration-300 focus:border-black focus:border-2'
               disabled={isSubmitting}
             >
               <ArrowLeft className='h-4 w-4 mr-2' aria-hidden='true' />
@@ -455,7 +455,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                 onChange={(e) => handleOtpChange(index, e.target.value)}
                 onKeyDown={(e) => handleOtpKeyDown(index, e)}
                 onPaste={index === 0 ? handleOtpPaste : undefined}
-                className='w-12 h-12 text-center text-xl font-semibold border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-transparent rounded-sm transition-colors'
+                className='w-12 h-12 text-center text-xl font-semibold border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-black focus:border-2 rounded-sm transition-colors'
                 aria-label={`Digit ${index + 1}`}
                 disabled={isSubmitting}
                 autoComplete='one-time-code'
@@ -476,7 +476,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                 canResend && !isSubmitting
                   ? 'text-black hover:text-gray-700 cursor-pointer'
                   : 'text-gray-400 cursor-not-allowed'
-              }`}
+              } focus:outline-none focus:border-black focus:border-2`}
               onClick={handleResendCode}
               disabled={!canResend || isSubmitting}
               aria-live='polite'
@@ -493,7 +493,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
 
           <Button
             type='submit'
-            className='w-full bg-sky-500 hover:bg-sky-400 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none'
+            className='w-full bg-black hover:bg-gray-800 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none focus:border-black focus:border-2'
             disabled={isSubmitting || otp.some((digit) => !digit)}
           >
             {isSubmitting ? (
@@ -520,7 +520,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                 setStep('email')
               }
             }}
-            className='w-full bg-transparent hover:bg-gray-50 text-black font-medium text-sm rounded-sm border border-gray-300 transition-all duration-300'
+            className='w-full bg-transparent hover:bg-gray-50 text-black font-medium text-sm rounded-sm border border-gray-300 transition-all duration-300 focus:border-black focus:border-2'
             disabled={isSubmitting}
           >
             <ArrowLeft className='h-4 w-4 mr-2' aria-hidden='true' />
@@ -546,7 +546,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
             Create New Password
           </h2>
           <p className='text-gray-500 text-xs text-center'>
-            Your password must be different from previous passwords
+            Your password must be different from previous passwords.
           </p>
         </div>
 
@@ -569,7 +569,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                   type={showPassword ? 'text' : 'password'}
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className='pr-10 border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-transparent rounded-sm transition-colors placeholder:text-gray-400'
+                  className='pr-10 border border-gray-300 hover:border-2 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-black focus:border-2 rounded-sm transition-colors placeholder:text-gray-400'
                   aria-describedby='password-requirements'
                   disabled={isSubmitting}
                   ref={initialFocusRef}
@@ -577,7 +577,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                 />
                 <button
                   type='button'
-                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-gray-600'
+                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-black'
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                   tabIndex='-1'
@@ -604,13 +604,13 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                   type={showConfirmPassword ? 'text' : 'password'}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className='pr-10 border border-gray-300 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-transparent rounded-sm transition-colors placeholder:text-gray-400'
+                  className='pr-10 border border-gray-300 hover:border-2 hover:border-black text-black focus:outline-none focus:ring-0 focus:border-black focus:border-2 rounded-sm transition-colors placeholder:text-gray-400'
                   disabled={isSubmitting}
                   autoComplete='new-password'
                 />
                 <button
                   type='button'
-                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-gray-600'
+                  className='absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-black'
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   aria-label={
                     showConfirmPassword ? 'Hide password' : 'Show password'
@@ -637,62 +637,10 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                 {error}
               </p>
             )}
-
-            <div
-              className='bg-gray-50 rounded-sm p-3 border border-gray-200'
-              id='password-requirements'
-            >
-              <p className='text-black font-medium text-xs mb-2'>
-                Password requirements:
-              </p>
-              <ul className='space-y-1'>
-                <li className='flex items-center text-xs'>
-                  <div
-                    className={`w-2 h-2 rounded-full mr-1.5 ${
-                      newPassword.length >= 8 ? 'bg-green-500' : 'bg-gray-200'
-                    }`}
-                    aria-hidden='true'
-                  ></div>
-                  <span className='text-gray-500'>At least 8 characters</span>
-                </li>
-                <li className='flex items-center text-xs'>
-                  <div
-                    className={`w-2 h-2 rounded-full mr-1.5 ${
-                      /[A-Z]/.test(newPassword) ? 'bg-green-500' : 'bg-gray-200'
-                    }`}
-                    aria-hidden='true'
-                  ></div>
-                  <span className='text-gray-500'>
-                    Include uppercase letter
-                  </span>
-                </li>
-                <li className='flex items-center text-xs'>
-                  <div
-                    className={`w-2 h-2 rounded-full mr-1.5 ${
-                      /[a-z]/.test(newPassword) ? 'bg-green-500' : 'bg-gray-200'
-                    }`}
-                    aria-hidden='true'
-                  ></div>
-                  <span className='text-gray-500'>
-                    Include lowercase letter
-                  </span>
-                </li>
-                <li className='flex items-center text-xs'>
-                  <div
-                    className={`w-2 h-2 rounded-full mr-1.5 ${
-                      /\d/.test(newPassword) ? 'bg-green-500' : 'bg-gray-200'
-                    }`}
-                    aria-hidden='true'
-                  ></div>
-                  <span className='text-gray-500'>Include number</span>
-                </li>
-              </ul>
-            </div>
           </div>
-
           <Button
             type='submit'
-            className='w-full bg-sky-500 hover:bg-sky-400 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none'
+            className='w-full bg-black hover:bg-gray-800 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none focus:border-black focus:border-2'
             disabled={isSubmitting}
           >
             {isSubmitting ? (
@@ -707,7 +655,6 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
               'Reset Password'
             )}
           </Button>
-
           <Button
             type='button'
             onClick={() => {
@@ -719,7 +666,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
                 setStep('otp')
               }
             }}
-            className='w-full bg-transparent hover:bg-gray-50 text-black font-medium text-sm rounded-sm border border-gray-300 transition-all duration-300'
+            className='w-full bg-transparent hover:bg-gray-50 text-black font-medium text-sm rounded-sm border border-gray-300 transition-all duration-300 focus:border-black focus:border-2'
             disabled={isSubmitting}
           >
             <ArrowLeft className='h-4 w-4 mr-2' aria-hidden='true' />
@@ -748,7 +695,7 @@ const ForgotPasswordFlow = ({ onBack, onPasswordReset }) => {
           </p>
           <Button
             onClick={onBack}
-            className='w-full bg-sky-500 hover:bg-sky-400 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none'
+            className='w-full bg-black hover:bg-gray-800 transition-all duration-300 text-white font-medium text-base rounded-sm shadow-none focus:border-black focus:border-2'
           >
             Return to Log In
           </Button>

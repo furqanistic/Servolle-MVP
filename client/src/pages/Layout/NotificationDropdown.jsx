@@ -1,4 +1,3 @@
-// NotificationDropdown.jsx
 import { Bell, Clock, MessageCircle, User, X } from 'lucide-react'
 import React, { useEffect, useState } from 'react'
 
@@ -129,7 +128,7 @@ const NotificationDropdown = ({ isOpen, onClose }) => {
 
   return (
     <div
-      className={`${dropdownPosition} max-h-96 bg-white rounded-lg shadow-lg overflow-hidden z-50 notification-dropdown`}
+      className={`${dropdownPosition} max-h-96 rounded-lg shadow-lg overflow-hidden z-[9999] notification-dropdown`}
     >
       {/* Arrow pointer connecting to the bell icon - positioned at the top right */}
       <div

@@ -5,8 +5,8 @@ import ConnectPage from './pages/Connect/ConnectPage'
 import HistoryPage from './pages/History/HistoryPage'
 import HomePage from './pages/Home/HomePage'
 import ProfilePage from './pages/Profile/ProfilePage'
-import QuicksPage from './pages/Quicks/QuicksPage'
 import SettingsPage from './pages/Settings/SettingsPage'
+import VideoDetailPage from './pages/Video/VideoDetailPage'
 
 const App = () => {
   return (
@@ -19,7 +19,7 @@ const App = () => {
 
         <Route path='/'>
           <Route path='home' element={<HomePage />} />
-          <Route path='quicks' element={<QuicksPage />} />
+          <Route path='video/:id' element={<VideoDetailPage />} />
           <Route path='connect' element={<ConnectPage />} />
           <Route path='history' element={<HistoryPage />} />
           <Route path='profile' element={<ProfilePage />} />
